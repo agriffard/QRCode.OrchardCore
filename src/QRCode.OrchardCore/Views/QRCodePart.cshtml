@@ -1,0 +1,46 @@
+@model QRCode.OrchardCore.ViewModels.QRCodePartViewModel
+@using OrchardCore.ContentManagement
+@using QRCode.OrchardCore.Models
+@inject QRCode.OrchardCore.Services.IQRCodeService QrService
+
+@{
+    var part = Model.QRCodePart;
+    string textToEncode = string.Empty;
+
+    if (part == null)
+    {
+        <div>QRCodePart not attached.</div>
+        return;
+    }
+
+    // Resolve text based on ValueSource
+    if (part.ValueSource?.StartsWith("Field:") == true)
+    {
+        var fieldName = part.ValueSource.Substring("Field:".Length);
+        var f = Model.ContentItem.Content?.FirstOrDefault()?["" + fieldName + ""]?.ToString();
+        textToEncode = f ?? string.Empty;
+    }
+    else if (part.ValueSource == "Custom")
+    {
+        textToEncode = part.CustomValue ?? string.Empty;
+    }
+    else // default to content url
+    {
+        textToEncode = Url.Content("~/") + Model.ContentItem.DisplayText;
+    }
+
+    if (string.IsNullOrEmpty(textToEncode))
+    {
+        <div>No value to generate QR code.</div>
+        return;
+    }
+
+    var bytes = await QrService.GenerateAsync(textToEncode, part.Size, part.ForegroundColor, part.BackgroundColor, part.ErrorCorrection, part.Format);
+    var mime = part.Format?.ToLower() == "svg" ? "image/svg+xml" : "image/png";
+    var base64 = System.Convert.ToBase64String(bytes);
+}
+
+@if (!string.IsNullOrEmpty(base64))
+{
+    <img src="data:@mime;base64,@base64" width="@part.Size" height="@part.Size" alt="QR Code" />
+}

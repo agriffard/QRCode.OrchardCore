@@ -1,0 +1,63 @@
+@model QRCode.OrchardCore.ViewModels.QRCodePartViewModel
+
+<fieldset class="form-group">
+    <div class="row">
+        <div class="col-md-6">
+            <label asp-for="ValueSource">@T["Value Source"]</label>
+            <select asp-for="ValueSource" class="form-control">
+                <option value="ContentUrl">@T["Content URL"]</option>
+                <option value="Custom">@T["Custom Value"]</option>
+                @* Add support for field selection in the future *@
+            </select>
+            <span class="hint">@T["Choose the source of the text to encode in the QR code."]</span>
+        </div>
+        <div class="col-md-6">
+            <label asp-for="CustomValue">@T["Custom Value"]</label>
+            <input asp-for="CustomValue" class="form-control" placeholder="@T["Enter custom text to encode"]" />
+            <span class="hint">@T["Only used when Value Source is set to 'Custom'."]</span>
+        </div>
+    </div>
+</fieldset>
+
+<fieldset class="form-group">
+    <div class="row">
+        <div class="col-md-3">
+            <label asp-for="Size">@T["Size (pixels)"]</label>
+            <input asp-for="Size" type="number" min="50" max="1000" class="form-control" />
+            <span class="hint">@T["Size of the QR code in pixels (square)."]</span>
+        </div>
+        <div class="col-md-3">
+            <label asp-for="ForegroundColor">@T["Foreground Color"]</label>
+            <input asp-for="ForegroundColor" type="color" class="form-control" />
+            <span class="hint">@T["Color of the QR code pattern."]</span>
+        </div>
+        <div class="col-md-3">
+            <label asp-for="BackgroundColor">@T["Background Color"]</label>
+            <input asp-for="BackgroundColor" type="color" class="form-control" />
+            <span class="hint">@T["Background color of the QR code."]</span>
+        </div>
+        <div class="col-md-3">
+            <label asp-for="ErrorCorrection">@T["Error Correction"]</label>
+            <select asp-for="ErrorCorrection" class="form-control">
+                <option value="L">@T["Low (L)"]</option>
+                <option value="M">@T["Medium (M)"]</option>
+                <option value="Q">@T["Quartile (Q)"]</option>
+                <option value="H">@T["High (H)"]</option>
+            </select>
+            <span class="hint">@T["Error correction level affects data recovery capability."]</span>
+        </div>
+    </div>
+</fieldset>
+
+<fieldset class="form-group">
+    <div class="row">
+        <div class="col-md-6">
+            <label asp-for="Format">@T["Output Format"]</label>
+            <select asp-for="Format" class="form-control">
+                <option value="png">@T["PNG"]</option>
+                <option value="svg">@T["SVG"]</option>
+            </select>
+            <span class="hint">@T["Choose the output format for the QR code."]</span>
+        </div>
+    </div>
+</fieldset>
